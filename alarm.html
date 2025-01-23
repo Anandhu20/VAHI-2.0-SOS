@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Alarm</title>
+</head>
+<body>
+    <h1>SOS Alert System</h1>
+    <!-- Button to send SOS -->
+    <button id="send-sos">Send SOS</button>
+
+    <!-- Hidden audio element -->
+    <audio id="sos-audio" src="/static/audio/alarm.mp3"></audio>
+
+    <script>
+        // Attach an event listener to the button
+        document.getElementById('send-sos').addEventListener('click', function () {
+            // Play the alarm audio
+            const sosAudio = document.getElementById('sos-audio');
+            sosAudio.play().catch(error => {
+                console.error('Error playing the audio:', error);
+            });
+        });
+    </script>
+</body>
+</html>

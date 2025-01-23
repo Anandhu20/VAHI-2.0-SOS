@@ -1,0 +1,53 @@
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: darkred;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        input[type="text"], input[type="email"] {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            width: 80%;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: darkblue;
+        }
+        #stopAlarmButton {
+            padding: 10px 20px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }

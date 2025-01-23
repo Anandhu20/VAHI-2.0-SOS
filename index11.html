@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distress Signal Generator</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+   
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+.directions-link {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #4285f4;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.directions-link:hover {
+    background-color: #3367d6;
+}
+.police-station-popup {
+        padding: 10px;
+        max-width: 300px;
+    }
+    .police-station-popup h3 {
+        margin: 0 0 10px 0;
+        color: #1a73e8;
+    }
+    .police-station-popup p {
+        margin: 5px 0;
+    }
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+    }
+.auth-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.auth-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.auth-form button:hover {
+    background-color: #0056b3;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info button {
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: darkred;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        input[type="text"], input[type="email"] {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            width: 80%;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: darkblue;
+        }
+        #stopAlarmButton {
+            padding: 10px 20px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <h1>Distress Signal Generator</h1>
+    <audio id="alarmSound">
+        <source src="/static/audio/alarm.mp3" type="audio/mpeg">
+    </audio>
+    
+
+    <div id="map"></div>
+    <button class="button" id="" onclick="getLocation()">Get Location</button>
+    <button class="button" id="sosButton" onclick="sendDistressSignal()">Send SOS</button>
+    <button class="button" onclick="window.location.href='helpers.html'">View Helpers</button>
+    <button id="alarmToggleButton" class="button" onclick="toggleAlarm()">Alarm</button>
+    
+    <!-- Registration Form -->
+    <div id="auth-container">
+        <div id="login-form" class="auth-form">
+            <h2>Login</h2>
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="App Password" required>
+            <button onclick="login()">Login</button>
+            <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+        </div>
+
+        <div id="register-form" class="auth-form" style="display: none;">
+            <h2>Register</h2>
+            <input type="text" id="register-name" placeholder="Name" required>
+            <input type="email" id="register-email" placeholder="Email" required>
+            <input type="password" id="register-password" placeholder="App Password" required>
+            <input type="text" id="register-latitude" placeholder="Latitude" required>
+            <input type="text" id="register-longitude" placeholder="Longitude" required>
+            <button onclick="register()">Register</button>
+            <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+
+    <div id="main-content" style="display: none;">
+        <div class="header">
+            <h1>Distress Signal Generator</h1>
+            <div class="user-info">
+                <span id="user-email"></span>
+                <button onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+
+        <!-- Rest of your existing content -->
+        <div id="map"></div>
+        <button class="button" id="getLocationBtn" onclick="getLocation()">Get Location</button>
+        <button class="button" id="sosButton" onclick="sendDistressSignal()">Send SOS</button>
+        <button class="button" onclick="window.location.href='helpers.html'">View Helpers</button>
+        <button id="alarmToggleButton" class="button" onclick="toggleAlarm()">Alarm</button>
+    <!-- Add or update the helpers container div -->
+    <div id="helpers-container" style="margin-top: 20px; display: none;">
+        <h2>Registered Helpers</h2>
+        <div class="button-container" style="margin: 10px 0;">
+            <button id="deleteBtn" class="button" style="background-color: #ff4444; display: none;">Delete Selected</button>
+        </div>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr style="background-color: #f4f4f4;">
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Name (Masked)</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Email (Masked)</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Latitude</th>
+                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Longitude</th>
+                    </tr>
+                </thead>
+                <tbody id="helpersTableBody">
+                    <!-- Helper data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+   
+    <script>
+        let map, markers=[], userLocation;
+        let alarmPlaying = false;
+        let helperMarkers = [];
+        let selectedRow = null;
+        let selectedHelperId = null;
+        const deleteBtn = document.getElementById('deleteBtn')
+        // Initialize OpenStreetMap
+        
+// Initialize the map centered on user's location
+
+function initMap() {
+    // Initialize the map with a default view
+    map = L.map('map');
+    map.setView([0, 0], 2); // Set default view to world map
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+}
+function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+
+function findNearbyPoliceStations(latitude, longitude) {
+    // Overpass API query to find police stations within 20km radius
+    const radius = 20000; // 20km in meters
+    const query = `
+        [out:json][timeout:25];
+        (
+            node["amenity"="police"](around:${radius},${latitude},${longitude});
+            way["amenity"="police"](around:${radius},${latitude},${longitude});
+            relation["amenity"="police"](around:${radius},${latitude},${longitude});
+        );
+        out body;
+        >;
+        out skel qt;
+    `;
+
+    const encodedQuery = encodeURIComponent(query);
+    const apiUrl = `https://overpass-api.de/api/interpreter?data=${encodedQuery}`;
+
+    // Clear existing markers
+    markers.forEach(marker => marker.remove());
+    markers = [];
+
+    // Custom police station icon
+    const policeIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.elements) {
+                data.elements.forEach(element => {
+                    if (element.type === 'node' && element.tags) {
+                        const { lat, lon, tags } = element;
+                        const name = tags.name || 'Police Station';
+                        const phone = tags['emergency:phone'] || tags.phone || 'N/A';
+                        const operator = tags.operator || 'N/A';
+                        const website = tags.website || '';
+                        
+                        // Calculate distance from user
+                        const distance = calculateDistance(latitude, longitude, lat, lon);
+                        
+                        // Create detailed popup content with Google Maps directions link
+                        const popupContent = `
+                            <div class="police-station-popup">
+                                <h3>${name}</h3>
+                                <p><strong>Emergency Phone:</strong> ${phone}</p>
+                                <p><strong>Distance:</strong> ${distance.toFixed(2)} km</p>
+                                ${operator !== 'N/A' ? `<p><strong>Operator:</strong> ${operator}</p>` : ''}
+                                ${website ? `<p><a href="${website}" target="_blank">Website</a></p>` : ''}
+                                <p><a href="https://www.google.com/maps/dir/${latitude},${longitude}/${lat},${lon}" 
+                                    target="_blank" class="directions-link">Get Directions on Google Maps</a></p>
+                            </div>
+                        `;
+                        
+                        // Create marker with custom icon
+                        const marker = L.marker([lat, lon], { icon: policeIcon })
+                            .bindPopup(popupContent);
+                        
+                        marker.addTo(map);
+                        markers.push(marker);
+                    }
+                });
+
+                // If no police stations found
+                if (markers.length === 0) {
+                    showNotification('No police stations found within 20km radius');
+                } else {
+                    showNotification(`Found ${markers.length} police stations within 20km`);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching police stations:', error);
+            showNotification('Error fetching police station data');
+        });
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth's radius in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+function toRad(degrees) {
+    return degrees * (Math.PI/180);
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+        function showPosition(position) {  
+    const latitude = position.coords.latitude;  
+    const longitude = position.coords.longitude;  
+    userLocation = { lat: latitude, lng: longitude };  
+    
+    // Get user's location and center the map
+if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+                map.setView([latitude, longitude], 13);
+                
+                // Add marker for user's location with blue color
+                const userIcon = L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+
+                L.marker([latitude, longitude], { icon: userIcon })
+                    .bindPopup('Your Current Location')
+                    .addTo(map);
+                
+                // Find nearby police stations
+                findNearbyPoliceStations(latitude, longitude);
+            },
+            error => {
+                console.error('Error getting location:', error);
+                map.setView([0, 0], 2);
+            }
+        );
+    }
+
+    // Update map  
+    map.setView([latitude, longitude], 15);  
+    if (marker) {  
+        marker.setLatLng([latitude, longitude]);  
+    } else {  
+        marker = L.marker([latitude, longitude]).addTo(map);  
+    }  
+
+    
+
+    
+}  
+        
+        //alarm sound
+        function toggleAlarm() {
+            const alarm = document.getElementById('alarmSound');
+            const toggleButton = document.getElementById('alarmToggleButton');
+            
+            if (!alarmPlaying) {
+                // Start alarm
+                alarm.loop = true;
+                alarm.volume = 1.0;
+                alarm.currentTime = 0;  // Reset the audio to start
+                
+                const playPromise = alarm.play();
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            alarmPlaying = true;
+                            toggleButton.textContent = 'Stop Alarm';
+                        })
+                        .catch(error => {
+                            console.error('Error playing alarm:', error);
+                            alert('Could not play alarm sound.');
+                        });
+                }
+            } else {
+                // Stop alarm
+                alarm.pause();
+                alarm.currentTime = 0;
+                alarmPlaying = false;
+                toggleButton.textContent = 'Alarm';
+            }
+        }
+        
+        //SOS alert
+        // Haversine formula to calculate distance between two points on Earth
+// function calculateDistance(lat1, lon1, lat2, lon2) {
+//     const R = 6371; // Earth's radius in km
+//     const dLat = (lat2 - lat1) * Math.PI / 180;
+//     const dLon = (lon2 - lon1) * Math.PI / 180;
+//     const a = 
+//         Math.sin(dLat/2) * Math.sin(dLat/2) +
+//         Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+//         Math.sin(dLon/2) * Math.sin(dLon/2);
+//     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+//     return R * c; // Distance in km
+// }
+
+// Function to get user's current location
+async function getCurrentLocation() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            reject(new Error('Geolocation is not supported by your browser'));
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                });
+            },
+            (error) => {
+                reject(error);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            }
+        );
+    });
+}
+
+// Function to show sending status
+function showStatus(message, isError = false) {
+    const statusElement = document.getElementById('sosStatus') || createStatusElement();
+    statusElement.textContent = message;
+    statusElement.className = `status-message ${isError ? 'error' : 'success'}`;
+    statusElement.style.display = 'block';
+    
+    if (!isError) {
+        setTimeout(() => {
+            statusElement.style.display = 'none';
+        }, 5000);
+    }
+}
+
+// Create status element if it doesn't exist
+function createStatusElement() {
+    const statusElement = document.createElement('div');
+    statusElement.id = 'sosStatus';
+    statusElement.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 4px;
+        color: white;
+        z-index: 1000;
+        display: none;
+    `;
+    document.body.appendChild(statusElement);
+    return statusElement;
+}
+
+// Main SOS function
+async function sendDistressSignal() {
+    const sosButton = document.getElementById('sosButton');
+    
+    try {
+        // Disable button while processing
+        sosButton.disabled = true;
+        
+        // Initial alert to user
+        alert('Attempting to send SOS signal...');
+        
+        // Get current location
+        const userLocation = await getCurrentLocation();
+        
+        if (!userLocation) {
+            alert('Unable to get your location. Please enable location services.');
+            return;
+        }
+
+        // Inform user that location was found
+        alert(`Location found! Latitude: ${userLocation.latitude.toFixed(4)}, Longitude: ${userLocation.longitude.toFixed(4)}`);
+
+        const payload = {
+            location: {
+                latitude: userLocation.latitude,
+                longitude: userLocation.longitude
+            },
+            radius: 10
+        };
+
+        // Send SOS signal to server
+        const response = await fetch('http://localhost:5000/send_sos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            mode: 'cors',
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || `Server error: ${response.statusText}`);
+        }
+
+        if (data.success) {
+            if (data.helpersNotified > 0) {
+                alert(`SOS sent successfully! ${data.helpersNotified} helper(s) have been notified in your area.`);
+            } else {
+                alert('SOS signal was sent, but no helpers were found within 10km of your location. Please try alternative emergency services.');
+            }
+        } else {
+            alert('Failed to send SOS signal. Please try again or contact emergency services directly.');
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert(`Error sending SOS: ${error.message}. Please try again or contact emergency services directly.`);
+    } finally {
+        // Re-enable button
+        sosButton.disabled = false;
+    }
+}
+
+// Function to get user's current location
+function getCurrentLocation() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            reject(new Error('Geolocation is not supported by your browser'));
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                });
+            },
+            (error) => {
+                let errorMessage;
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = "Location access denied. Please enable location services.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = "Location information unavailable. Please try again.";
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = "Location request timed out. Please try again.";
+                        break;
+                    default:
+                        errorMessage = "An unknown error occurred getting location.";
+                }
+                reject(new Error(errorMessage));
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    });
+}
+
+        
+        // Add this to your existing JavaScript code
+        function registerUser() {
+            // Get form values
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const latitude = document.getElementById('latitude').value.trim();
+            const longitude = document.getElementById('longitude').value.trim();
+
+            // Basic validation
+            if (!name || !email || !latitude || !longitude) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Validate email format
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            // Validate coordinates
+            const lat = parseFloat(latitude);
+            const lng = parseFloat(longitude);
+            if (isNaN(lat) || isNaN(lng)) {
+                alert('Please enter valid coordinates');
+                return;
+            }
+
+            // Prepare data for sending
+            const userData = {
+                name: name,
+                email: email,
+                latitude: lat,
+                longitude: lng
+            };
+
+            // Send POST request to backend
+            fetch('http://localhost:5000/register_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Registration successful!');
+                    // Clear the form
+                    document.getElementById('name').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('latitude').value = '';
+                    document.getElementById('longitude').value = '';
+                } else {
+                    alert(data.message || 'Registration failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred during registration. Please try again.');
+            });
+        }
+
+
+        // Add this function to mask sensitive data
+        function maskData(text, keepFirst = 2) {
+    if (!text) return '';
+    const firstChars = text.substring(0, keepFirst);
+    const masked = 'x'.repeat(text.length - keepFirst);
+    return firstChars + masked;
+}
+
+function maskEmail(email) {
+    const [localPart, domain] = email.split('@');
+    return `${maskData(localPart)}@${domain}`;
+}
+
+function selectRow(row, helperId) {
+    if (selectedRow) {
+        selectedRow.classList.remove('selected');
+    }
+    if (selectedRow === row) {
+        selectedRow = null;
+        selectedHelperId = null;
+        deleteBtn.style.display = 'none';
+    } else {
+        row.classList.add('selected');
+        selectedRow = row;
+        selectedHelperId = helperId;
+        deleteBtn.style.display = 'inline-block';
+    }
+}
+
+function deleteHelper() {
+    if (!selectedHelperId) return;
+    
+    if (confirm('Are you sure you want to delete this helper?')) {
+        fetch(`/delete_helper/${selectedHelperId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                selectedRow.remove();
+                selectedRow = null;
+                selectedHelperId = null;
+                deleteBtn.style.display = 'none';
+                alert('Helper deleted successfully');
+            } else {
+                alert('Failed to delete helper: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting helper');
+        });
+    }
+}
+
+function displayHelpers() {
+    const helpersContainer = document.getElementById('helpers-container');
+    const tableBody = document.getElementById('helpersTableBody');
+    
+    helpersContainer.style.display = 'block';
+    
+    fetch('/get_helpers')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                tableBody.innerHTML = '';
+                
+                if (data.helpers.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 20px;">
+                                No registered helpers found
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                data.helpers.forEach((helper, index) => {
+                    const row = document.createElement('tr');
+                    row.style.backgroundColor = index % 2 === 0 ? '#ffffff' : '#f9f9f9';
+                    row.style.cursor = 'pointer';
+                    
+                    row.innerHTML = `
+                        <td style="padding: 12px; border: 1px solid #ddd;">${maskData(helper.name)}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">${maskEmail(helper.email)}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">${helper.latitude}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd;">${helper.longitude}</td>
+                    `;
+                    
+                    row.onclick = () => selectRow(row, helper.id);
+                    tableBody.appendChild(row);
+                });
+            } else {
+                throw new Error(data.error || 'Failed to fetch helpers');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 20px; color: red;">
+                        Error loading helpers: ${error.message}
+                    </td>
+                </tr>
+            `;
+        });
+}
+document.getElementById('deleteBtn').onclick = deleteHelper;
+        function showError(error) {
+            let errorMessage;
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    errorMessage = "An unknown error occurred.";
+                    break;
+            }
+            alert(errorMessage);
+        }
+        
+        document.addEventListener("DOMContentLoaded", initMap);
+        // Clean up alarm on page unload
+        window.addEventListener('beforeunload', function() {
+            if (alarmPlaying) {
+                const alarm = document.getElementById('alarmSound');
+                alarm.pause();
+                alarm.currentTime = 0;
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+
+            document.getElementById('getLocationBtn').addEventListener('click', function() {
+                showStatus('Getting your location...');
+                
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const { latitude, longitude } = position.coords;
+                            
+                            // Update map view
+                            map.setView([latitude, longitude], 14);
+                            
+                            // Update or add user marker
+                            if (userMarker) {
+                                userMarker.remove();
+                            }
+                            userMarker = L.marker([latitude, longitude])
+                                .bindPopup('Your Location')
+                                .addTo(map);
+                            
+                            // Get nearby police stations
+                            getPoliceStations(latitude, longitude);
+                        },
+                        function(error) {
+                            let errorMessage = 'Error getting location: ';
+                            switch(error.code) {
+                                case error.PERMISSION_DENIED:
+                                    errorMessage += 'Location permission denied';
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    errorMessage += 'Location information unavailable';
+                                    break;
+                                case error.TIMEOUT:
+                                    errorMessage += 'Location request timed out';
+                                    break;
+                                default:
+                                    errorMessage += 'Unknown error occurred';
+                            }
+                            showStatus(errorMessage, true);
+                        }
+                    );
+                } else {
+                    showStatus('Geolocation is not supported by your browser', true);
+                }
+            });
+        });
+    </script>
+    <script src="auth.js"></script>
+    <script src="map.js"></script>
+</body>
+</html>
