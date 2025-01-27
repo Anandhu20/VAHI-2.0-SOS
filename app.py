@@ -67,7 +67,7 @@ def save_users(users):
 # Route to render the index page
 @app.route('/')
 def index():
-    return render_template('index11.html')
+    return render_template('index.html')
 
 @app.route('/audio-file')
 def serve_audio():
@@ -150,14 +150,19 @@ def get_location_info():
 
 # Route to send SOS
 def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371  # Earth's radius in km
-    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+    R = 6371  # Earth's radius in kilometers
+
+    # Precise conversion and calculation
+    lat1, lon1, lat2, lon2 = map(math.radians, [float(lat1), float(lon1), float(lat2), float(lon2)])
+    
     dlat = lat2 - lat1
     dlon = lon2 - lon1
-    a = sin(dlat/2)*2 + cos(lat1) * cos(lat2) * sin(dlon/2)*2
-    c = 2 * atan2(sqrt(a), sqrt(1-a))
-    return R * c
-
+    a = (math.sin(dlat/2)**2 + 
+         math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    distance = R * c
+    
+    return distance
 
 def get_helpers_from_database():
     # Query actual helpers from the database
@@ -178,6 +183,8 @@ def get_nearby_helpers(user_lat, user_lon, radius=10):
         helpers = RegisteredUser.query.all()
         nearby_helpers = []
         
+        print(f"Searching helpers near: {user_lat}, {user_lon}")
+        
         for helper in helpers:
             distance = calculate_distance(
                 float(user_lat), 
@@ -186,6 +193,9 @@ def get_nearby_helpers(user_lat, user_lon, radius=10):
                 float(helper.longitude)
             )
             
+            print(f"Helper Location: {helper.latitude}, {helper.longitude}")
+            print(f"Calculated Distance: {distance} km")
+            
             if distance <= radius:
                 nearby_helpers.append({
                     'id': helper.id,
@@ -193,9 +203,10 @@ def get_nearby_helpers(user_lat, user_lon, radius=10):
                     'distance': round(distance, 2)
                 })
         
+        print(f"Found {len(nearby_helpers)} nearby helpers")
         return nearby_helpers
     except Exception as e:
-        app.logger.error(f"Helper search error: {str(e)}")
+        print(f"Helper search error: {str(e)}")
         return []
 
 
@@ -251,106 +262,83 @@ def get_nearby_helpers(user_lat, user_lon, radius=10):
 
 # # Update the send_sos route to include email notifications
 # # Route to send SOS
+
+# Update email configuration
+EMAIL_CONFIG = {
+    'MAIL_SERVER': 'smtp.gmail.com',
+    'MAIL_PORT': 587,
+    'MAIL_USE_TLS': True,
+    'MAIL_USERNAME': os.getenv('EMAIL_USER'),
+    'MAIL_PASSWORD': os.getenv('EMAIL_PASSWORD')
+}
+
+def send_sos_email(recipient, location, distance):
+    try:
+        # Validate credentials
+        if not EMAIL_CONFIG['MAIL_USERNAME'] or not EMAIL_CONFIG['MAIL_PASSWORD']:
+            raise ValueError("Email credentials missing")
+
+        # Create message
+        msg = MIMEMultipart()
+        msg['From'] = EMAIL_CONFIG['MAIL_USERNAME']
+        msg['To'] = recipient
+        msg['Subject'] = "EMERGENCY SOS ALERT!"
+
+        # Create body with string (not bytes)
+        body = f"""
+        EMERGENCY ALERT - Someone needs help!
+        
+        Location Details:
+        Latitude: {location['latitude']}
+        Longitude: {location['longitude']}
+        Distance from you: {distance:.2f} km
+        
+        Google Maps Link:
+        https://www.google.com/maps?q={location['latitude']},{location['longitude']}
+        
+        Please respond if you can help!
+        """
+
+        msg.attach(MIMEText(body, 'plain'))
+
+        # Send email
+        with smtplib.SMTP(EMAIL_CONFIG['MAIL_SERVER'], EMAIL_CONFIG['MAIL_PORT']) as server:
+            server.starttls()
+            server.login(EMAIL_CONFIG['MAIL_USERNAME'], EMAIL_CONFIG['MAIL_PASSWORD'])
+            server.send_message(msg)
+            return True
+
+    except Exception as e:
+        logger.error(f"Email error to {recipient}: {str(e)}")
+        return False
+
+# Update send_sos route to use new email function
 @app.route('/send_sos', methods=['POST'])
 def send_sos():
     try:
-        # Get location data from the request
         data = request.get_json()
         user_location = data['location']
-
-        # Get nearby helpers
-        helpers = get_nearby_helpers(
+        
+        nearby_helpers = get_nearby_helpers(
             user_location['latitude'],
             user_location['longitude']
         )
         
-        if not data or 'location' not in data:
-            return jsonify({
-                'success': False,
-                'message': 'No location data provided',
-                'helpersNotified': 0
-            }), 400
-
-        sender_location = data['location']
-        radius = data.get('radius', 10)  # 10km default radius
-
-        # Get helpers from database
-        helpers = get_helpers_from_database()
-        nearby_helpers = []
         emails_sent = 0
-
-        # Email credentials
-        sender_email = os.getenv('EMAIL_ID')
-        app_password = os.getenv('EMAIL_PASSWORD')
-
-        # Find nearby helpers and send emails
-        for helper in helpers:
-            try:
-                distance = calculate_distance(
-                    float(sender_location['latitude']),
-                    float(sender_location['longitude']),
-                    float(helper['latitude']),
-                    float(helper['longitude'])
-                )
-                
-                if distance <= radius:
-                    nearby_helpers.append(helper)
-                    
-                    # Create email for this helper
-                    msg = MIMEMultipart()
-                    msg['From'] = sender_email
-                    msg['To'] = helper['email']
-                    msg['Subject'] = "SOS - Emergency Alert!"
-
-                    # Email body with location and distance
-                    body = f"""
-                    EMERGENCY ALERT - SOS Signal Received!
-                    
-                    Someone nearby needs immediate help!
-                    
-                    Location Details:
-                    Latitude: {sender_location['latitude']}
-                    Longitude: {sender_location['longitude']}
-                    Distance from you: {distance:.2f} km
-                    
-                    Google Maps Link: https://www.google.com/maps?q={sender_location['latitude']},{sender_location['longitude']}
-                    
-                    Please respond if you're able to help!
-                    """
-                    
-                    msg.attach(MIMEText(body, 'plain'))
-
-                    # Send email
-                    try:
-                        server = smtplib.SMTP('smtp.gmail.com', 587)
-                        server.starttls()
-                        server.login(sender_email, app_password)
-                        server.sendmail(sender_email, helper['email'], msg.as_string())
-                        server.quit()
-                        emails_sent += 1
-                        logger.info(f"Email sent to helper at distance {distance}km")
-                    except Exception as email_error:
-                        logger.error(f"Failed to send email to {helper['email']}: {str(email_error)}")
-                        continue
-                    
-            except Exception as e:
-                logger.error(f"Error processing helper {helper['id']}: {str(e)}")
-                continue
+        for helper in nearby_helpers:
+            if send_sos_email(helper['email'], user_location, helper['distance']):
+                emails_sent += 1
 
         return jsonify({
             'success': True,
-            'message': f'SOS signal sent successfully to {emails_sent} helpers',
-            'helpersNotified': emails_sent,
-            'radius': radius,
-            'location': sender_location
+            'helpersNotified': emails_sent
         })
 
     except Exception as e:
-        logger.error(f"Error processing SOS request: {str(e)}")
+        logger.error(f"SOS Error: {str(e)}")
         return jsonify({
-            'success': False,
-            'message': f'Server error: {str(e)}',
-            'helpersNotified': 0
+            'success': False, 
+            'message': str(e)
         }), 500
 # Route to register a user
 @app.route('/register_user', methods=['POST'])

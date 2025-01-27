@@ -1,0 +1,122 @@
+2025-01-24 01:24:11,729 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:24:11,729 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:24:13,633 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:24:13] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:24:13,895 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:24:13,895 - app - INFO - Search Radius: 10 km
+2025-01-24 01:24:13,903 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:24:13,903 - app - ERROR - Email credentials missing
+2025-01-24 01:24:13,904 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:24:13] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:26:39,226 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:26:39] "OPTIONS /get_location_info HTTP/1.1" 200 -
+2025-01-24 01:26:39,527 - urllib3.util.retry - DEBUG - Converted retries value: 2 -> Retry(total=2, connect=None, read=None, redirect=None, status=None)
+2025-01-24 01:26:39,543 - urllib3.util.retry - DEBUG - Converted retries value: 2 -> Retry(total=2, connect=None, read=None, redirect=None, status=None)
+2025-01-24 01:26:39,543 - geopy - DEBUG - Nominatim.reverse: https://nominatim.openstreetmap.org/reverse?lat=9.505855&lon=76.549324&format=json&accept-language=en&addressdetails=1
+2025-01-24 01:26:39,543 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): nominatim.openstreetmap.org:443
+2025-01-24 01:26:40,355 - urllib3.connectionpool - DEBUG - https://nominatim.openstreetmap.org:443 "GET /reverse?lat=9.505855&lon=76.549324&format=json&accept-language=en&addressdetails=1 HTTP/1.1" 200 768
+2025-01-24 01:26:40,359 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:26:40] "POST /get_location_info HTTP/1.1" 200 -
+2025-01-24 01:26:43,538 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:26:43] "GET /get_helpers HTTP/1.1" 200 -
+2025-01-24 01:27:13,779 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:27:13] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:27:14,035 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:27:14,035 - app - INFO - Search Radius: 10 km
+2025-01-24 01:27:14,035 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:27:14,035 - app - ERROR - Email credentials missing
+2025-01-24 01:27:14,035 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:27:14] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:27:16,399 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:27:16] "OPTIONS /get_location_info HTTP/1.1" 200 -
+2025-01-24 01:27:16,728 - urllib3.util.retry - DEBUG - Converted retries value: 2 -> Retry(total=2, connect=None, read=None, redirect=None, status=None)
+2025-01-24 01:27:16,730 - urllib3.util.retry - DEBUG - Converted retries value: 2 -> Retry(total=2, connect=None, read=None, redirect=None, status=None)
+2025-01-24 01:27:16,731 - geopy - DEBUG - Nominatim.reverse: https://nominatim.openstreetmap.org/reverse?lat=9.505855&lon=76.549324&format=json&accept-language=en&addressdetails=1
+2025-01-24 01:27:16,731 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): nominatim.openstreetmap.org:443
+2025-01-24 01:27:17,349 - urllib3.connectionpool - DEBUG - https://nominatim.openstreetmap.org:443 "GET /reverse?lat=9.505855&lon=76.549324&format=json&accept-language=en&addressdetails=1 HTTP/1.1" 200 768
+2025-01-24 01:27:17,349 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:27:17] "POST /get_location_info HTTP/1.1" 200 -
+2025-01-24 01:27:31,423 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:27:31] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:27:31,664 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:27:31,664 - app - INFO - Search Radius: 10 km
+2025-01-24 01:27:31,664 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:27:31,664 - app - ERROR - Email credentials missing
+2025-01-24 01:27:31,664 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:27:31] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:29:40,470 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:29:42,086 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:29:42,096 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:29:49,255 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:29:49] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:29:49,517 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:29:49,517 - app - INFO - Search Radius: 10 km
+2025-01-24 01:29:49,532 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:29:49,532 - app - ERROR - Email credentials missing
+2025-01-24 01:29:49,538 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:29:49] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:29:58,041 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:29:59,188 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:29:59,194 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:30:59,960 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:31:01,195 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:31:01,204 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:31:06,140 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:31:06] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:31:06,397 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:31:06,397 - app - INFO - Search Radius: 10 km
+2025-01-24 01:31:06,424 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:31:06,424 - app - ERROR - Email credentials missing
+2025-01-24 01:31:06,426 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:31:06] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:31:29,084 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:31:30,442 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:31:30,448 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:31:33,661 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:31:33] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:31:33,918 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:31:33,918 - app - INFO - Search Radius: 10 km
+2025-01-24 01:31:33,918 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:31:33,918 - app - ERROR - Email credentials missing
+2025-01-24 01:31:33,926 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:31:33] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:32:41,300 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:32:42,640 - __main__ - ERROR - Email credentials missing - set EMAIL_USER and EMAIL_APP_PASSWORD environment variables
+2025-01-24 01:32:42,659 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:32:42,665 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:32:47,348 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:32:47] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:32:47,587 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:32:47,587 - app - INFO - Search Radius: 10 km
+2025-01-24 01:32:47,587 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:32:47,587 - app - ERROR - Email credentials missing
+2025-01-24 01:32:47,587 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:32:47] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:32:59,385 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:33:00,514 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:33:00,519 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:33:08,328 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:33:09,651 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:33:09,651 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:33:13,243 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:33:13] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:33:13,502 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:33:13,502 - app - INFO - Search Radius: 10 km
+2025-01-24 01:33:13,508 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:33:13,508 - app - ERROR - Email credentials missing
+2025-01-24 01:33:13,509 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:33:13] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:34:18,330 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:34:37,607 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-01-24 01:34:37,609 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-01-24 01:34:37,611 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:34:38,642 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:34:38,648 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:34:42,273 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:34:42] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:34:42,530 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:34:42,530 - app - INFO - Search Radius: 10 km
+2025-01-24 01:34:42,533 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:34:42,538 - app - ERROR - Email credentials missing
+2025-01-24 01:34:42,539 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:34:42] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:36:23,884 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:36:24,010 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:36:49,024 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:36:49,982 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:36:49,998 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:37:56,391 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:37:56,506 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:37:57,712 - werkzeug - WARNING -  * Debugger is active!
+2025-01-24 01:37:57,722 - werkzeug - INFO -  * Debugger PIN: 491-698-504
+2025-01-24 01:37:59,582 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:37:59] "OPTIONS /send_sos HTTP/1.1" 200 -
+2025-01-24 01:37:59,836 - app - INFO - Received Location: {'latitude': 9.505855, 'longitude': 76.549324}
+2025-01-24 01:37:59,836 - app - INFO - Search Radius: 10 km
+2025-01-24 01:37:59,846 - app - INFO - Nearby Helpers Found: 1
+2025-01-24 01:37:59,846 - app - ERROR - Email credentials missing
+2025-01-24 01:37:59,847 - werkzeug - INFO - 127.0.0.1 - - [24/Jan/2025 01:37:59] "[35m[1mPOST /send_sos HTTP/1.1[0m" 500 -
+2025-01-24 01:38:09,484 - werkzeug - INFO -  * Detected change in 'c:\\Users\\ANANDHU\\flutter project\\Empty testing\\X\\app.py', reloading
+2025-01-24 01:38:09,621 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:38:40,063 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:39:04,271 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:40:35,616 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:40:56,843 - werkzeug - INFO -  * Restarting with stat
+2025-01-24 01:41:16,756 - werkzeug - INFO -  * Restarting with stat
